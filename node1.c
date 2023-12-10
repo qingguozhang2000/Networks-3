@@ -1,11 +1,7 @@
 #include <stdio.h>
-#include "project3.h"
+#include "utilities.h"
 
 extern int TraceLevel;
-
-struct distance_table {
-  int costs[MAX_NODES][MAX_NODES];
-};
 struct distance_table dt1;
 struct NeighborCosts   *neighbor1;
 
