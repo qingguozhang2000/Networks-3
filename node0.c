@@ -2,24 +2,16 @@
 #include "utilities.h"
 
 extern int TraceLevel;
+extern float clocktime;
 
 struct distance_table dt0;
-struct NeighborCosts   *neighbor0;
+struct NeighborCosts *neighborCosts0[MAX_NODES];
 
 /* students to write the following two routines, and maybe some others */
 
 void rtinit0() {
-    // Find our neighbor nodes and the costs to those nodes
-    neighbor0 = getNeighborCosts(0);
-
-    // Initialize the distance table and other structures
-    for (int nodenum = 0; nodenum < 4; nodenum++) {
-        dt0.costs[0][nodenum] = neighbor0->NodeCosts[nodenum];
-        printf("%d,", dt0.costs[0][nodenum]);
-    }
-    printf("\n");
-
-    // Send minimum cost paths to neighbor nodes
+    init_node(0, neighborCosts0, &dt0);
+    printdt(0, neighborCosts0[0], &dt0);
 }
 
 
@@ -44,7 +36,7 @@ void rtupdate0( struct RoutePacket *rcvdpkt ) {
 //                 constantly updated as the node gets new
 //                 messages from other nodes.
 /////////////////////////////////////////////////////////////////////
-void printdt0( int MyNodeNumber, struct NeighborCosts *neighbor, 
+void printdt( int MyNodeNumber, struct NeighborCosts *neighbor, 
 		struct distance_table *dtptr ) {
     int       i, j;
     int       TotalNodes = neighbor->NodesInNetwork;     // Total nodes in network
@@ -77,5 +69,5 @@ void printdt0( int MyNodeNumber, struct NeighborCosts *neighbor,
         }
     }
     printf("\n");
-}    // End of printdt0
+}    // End of printdt
 

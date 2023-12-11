@@ -2,13 +2,16 @@
 #include "utilities.h"
 
 extern int TraceLevel;
+extern float clocktime;
+
 struct distance_table dt3;
-struct NeighborCosts   *neighbor3;
+struct NeighborCosts *neighborCosts3[MAX_NODES];
 
 /* students to write the following two routines, and maybe some others */
 
 void rtinit3() {
-
+    init_node(3, neighborCosts3, &dt3);
+    printdt1(3, neighborCosts3[3], &dt3);
 }
 
 
