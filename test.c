@@ -1,17 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "utilities.h"
 
-// struct distance_table dt;
-
-void init_distance_table(struct distance_table *dt, struct NeighborCosts *neighbors, int datafor) {
-    for (int nodenum = 0; nodenum < 4; nodenum++) {
-        dt->costs[datafor][nodenum] = neighbors->NodeCosts[nodenum];
-        printf("%d,", dt->costs[datafor][nodenum]);
-    }
-    printf("\n");
-}
+#define MAX_NODES 4
 
 int** read_costs(const char *config_file_name, int *n) {
     char line[100];
@@ -75,4 +66,11 @@ void print_costs(int n, int **matrix) {
     }
 
     printf("\n");
+}
+
+int main( int argc, char *argv[]) {
+    int n;
+    int **matrix = read_costs("NodeConfigurationFile", &n);
+    print_costs(n, matrix);
+    free_matrix(n, matrix);
 }

@@ -1,3 +1,5 @@
 .pdf
 .vscode
+*.dSYM
 project3
+test
