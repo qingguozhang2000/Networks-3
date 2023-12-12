@@ -78,7 +78,13 @@ void update_node(int current_node, struct NeighborCosts **neighborCosts, struct 
     }
 
     if (TraceLevel >= 1) {
-        Dijkstra(dt->costs, n, current_node);
+        int Graph[4][4];
+        for (int i=0; i<4; i++) {
+            for (int j=0; j<4; j++) {
+                Graph[i][j] = neighborCosts[i]->NodeCosts[j];
+            }
+        }
+        Dijkstra(Graph, n, current_node);
         // printf("node %d current distance vector: ", current_node);
         // for (int i=0; i<n; i++) {
         //     int min_cost = INFINITY;
