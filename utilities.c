@@ -61,34 +61,6 @@ void init_node(int current_node, struct NeighborCosts **neighborCosts, struct di
             }
         }
     }
-
-    // // Initialize the distance table and other structures
-    // for (int i = 0; i < n; i++) {
-    //     if (i != current_node) {
-    //         neighborCosts[i] = getNeighborCosts(i);
-    //     }
-    // }
-
-    // for (int i = 0; i < n; i++) { // i = destNode
-    //     if (i == current_node) { continue; }
-    //     for (int j = 0; j < n; j++) { // j = viaNode
-    //         if (j == current_node) { continue; }
-    //         if (i == j) {
-    //             dt->costs[i][i] = neighborCosts[current_node]->NodeCosts[i];
-    //             continue;
-    //         }
-
-    //         int src_via_cost = neighborCosts[current_node]->NodeCosts[j];
-    //         int via_dest_cost = neighborCosts[j]->NodeCosts[i];
-
-    //         int total_cost = src_via_cost + via_dest_cost;
-    //         if (total_cost > INFINITY) {
-    //             total_cost = INFINITY;
-    //         }
-
-    //         dt->costs[i][j] = total_cost;
-    //     }
-    // }
 }
 
 void update_node(int current_node, struct NeighborCosts **neighborCosts, struct distance_table *dt, struct RoutePacket *rcvdpkt) {
@@ -105,36 +77,74 @@ void update_node(int current_node, struct NeighborCosts **neighborCosts, struct 
         dt->costs[rcvdpkt->sourceid][i] = rcvdpkt->mincost[i];
     }
 
-    // for (int i = 0; i < n; i++) { // i = destNode
-    //     for (int j = 0; j < n; j++) { // j = viaNode
-    //         int src_via_cost = neighborCosts[current_node]->NodeCosts[j];
-    //         int via_dest_cost = INFINITY;
-    //         if (neighborCosts[j] != NULL) {
-    //             via_dest_cost = neighborCosts[j]->NodeCosts[i];
-    //         }
-
-    //         int total_cost = src_via_cost + via_dest_cost;
-    //         if (total_cost > INFINITY) {
-    //             total_cost = INFINITY;
-    //         }
-
-    //         dt->costs[i][j] = total_cost;
-    //     }
-    // }
-
     if (TraceLevel >= 1) {
-        printf("node %d current distance vector: ", current_node);
-        for (int i=0; i<n; i++) {
-            int min_cost = INFINITY;
-            for (int j=0; j<n; j++) {
-                if (i == j) { continue; }
-                int cost = dt->costs[i][j];
-                if (cost < min_cost) {
-                    min_cost = cost;
-                }
-            }
-            printf("%d ", min_cost);
-        }
-        printf("\n");
+        Dijkstra(dt->costs, n, current_node);
+        // printf("node %d current distance vector: ", current_node);
+        // for (int i=0; i<n; i++) {
+        //     int min_cost = INFINITY;
+        //     for (int j=0; j<n; j++) {
+        //         if (i == j) { continue; }
+        //         int cost = dt->costs[i][j];
+        //         if (cost < min_cost) {
+        //             min_cost = cost;
+        //         }
+        //     }
+        //     printf("%d ", min_cost);
+        // }
+        // printf("\n");
     }
+}
+
+/*********** Dikstra Algorithm ***********/
+
+void Dijkstra(int Graph[MAX_NODES][MAX_NODES], int n, int current_node) {
+  int cost[MAX_NODES][MAX_NODES], distance[MAX_NODES], pred[MAX_NODES];
+  int visited[MAX_NODES], count, mindistance, nextnode, i, j;
+
+  // Creating cost matrix
+  for (i = 0; i < n; i++)
+    for (j = 0; j < n; j++)
+      if (Graph[i][j] == 0)
+        cost[i][j] = INFINITY;
+      else
+        cost[i][j] = Graph[i][j];
+
+  for (i = 0; i < n; i++) {
+    distance[i] = cost[current_node][i];
+    pred[i] = current_node;
+    visited[i] = 0;
+  }
+
+  distance[current_node] = 0;
+  visited[current_node] = 1;
+  count = 1;
+
+  while (count < n - 1) {
+    mindistance = INFINITY;
+
+    for (i = 0; i < n; i++)
+      if (distance[i] < mindistance && !visited[i]) {
+        mindistance = distance[i];
+        nextnode = i;
+      }
+
+    visited[nextnode] = 1;
+    for (i = 0; i < n; i++)
+      if (!visited[i])
+        if (mindistance + cost[nextnode][i] < distance[i]) {
+          distance[i] = mindistance + cost[nextnode][i];
+          pred[i] = nextnode;
+        }
+    count++;
+  }
+
+  // Printing the distance
+  if (TraceLevel >= 1) {
+    printf("At time t=%1.6f, ", clocktime);
+    printf("node %d current distance vector: ", current_node);
+    for (int i=0; i<n; i++) {
+        printf("%d ", distance[i]);
+    }
+    printf("\n");
+  }
 }
