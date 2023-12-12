@@ -11,12 +11,17 @@ struct NeighborCosts *neighborCosts2[MAX_NODES];
 
 void rtinit2() {
     init_node(2, neighborCosts2, &dt2);
-    printdt1(2, neighborCosts2[2], &dt2);
+    if (TraceLevel > 1) {
+        printdt1(2, neighborCosts2[2], &dt2);
+    }
 }
 
 
 void rtupdate2( struct RoutePacket *rcvdpkt ) {
-
+    update_node(2, neighborCosts2, &dt2, rcvdpkt);
+    if (TraceLevel > 1) {
+        printdt1(2, neighborCosts2[2], &dt2);
+    }
 }
 
 

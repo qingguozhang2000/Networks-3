@@ -5,4 +5,4 @@ struct distance_table {
 };
 
 void init_node(int current_node,struct NeighborCosts **neighborCosts, struct distance_table *dt);
-void init_distance_table(struct distance_table *dt, struct NeighborCosts *neighbors, int datafor);
+void update_node(int current_node, struct NeighborCosts **neighborCosts, struct distance_table *dt, struct RoutePacket *rcvdpkt);
